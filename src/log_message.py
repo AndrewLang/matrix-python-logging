@@ -15,31 +15,39 @@ class LogMessage:
         self.name = name
         return self
 
-    def debug(name, message):
-        msg = LogMessage(name, LevelDebug.name, message,
+    def debug(name, message: str, *values) -> 'LogMessage':
+        content = '{} {}'.format(message, LogMessage.format(' ', values))
+        msg = LogMessage(name, LevelDebug.name, content,
                          LogMessage._format_now())
         return msg
 
-    def info(name, message):
-        msg = LogMessage(name, LevelInfo.name, message,
+    def info(name, message: str, *values):
+        content = '{} {}'.format(message, LogMessage.format(' ', values))
+        msg = LogMessage(name, LevelInfo.name, content,
                          LogMessage._format_now())
         return msg
 
-    def warn(name, message):
-        msg = LogMessage(name, LevelWarn.name, message,
+    def warn(name, message: str, *values):
+        content = '{} {}'.format(message, LogMessage.format(' ', values))
+        msg = LogMessage(name, LevelWarn.name, content,
                          LogMessage._format_now())
         return msg
 
-    def error(name, message):
-        msg = LogMessage(name, LevelError.name, message,
+    def error(name, message: str, *values):
+        content = '{} {}'.format(message, LogMessage.format(' ', values))
+        msg = LogMessage(name, LevelError.name, content,
                          LogMessage._format_now())
         return msg
 
-    def fatal(name, message):
-        msg = LogMessage(name, LevelFatal.name, message,
+    def fatal(name, message: str, *values):
+        content = '{} {}'.format(message, LogMessage.format(' ', values))
+        msg = LogMessage(name, LevelFatal.name, content,
                          LogMessage._format_now())
         return msg
 
-    def _format_now():
+    def format(template: str, *args) -> str:
+        return template.join(str(v) for v in args)
+
+    def _format_now() -> str:
         now = datetime.datetime.now()
         return now.strftime('%Y-%m-%d %H:%M:%S.%f')

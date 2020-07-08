@@ -50,3 +50,6 @@ class TestLogMessage(TestCase):
         self.assertEqual('test', msg.name)
         self.assertEqual(LevelFatal.name, msg.level)
 
+    def test_format_string(self):
+        msg = LogMessage.format(' ', 'this', 'is', 1)
+        self.assertEqual('this is 1', msg)
