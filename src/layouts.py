@@ -47,10 +47,12 @@ class LogThreadIdLayout(LogLayout):
     def layout(self, msg: LogMessage) -> str:
         return f'{current_thread().ident}'
 
+
 class LogProcessIdLayout(LogLayout):
 
     def layout(self, msg: LogMessage) -> str:
         return f'{os.getpid()}'
+
 
 class LogComposeLayout(LogLayout):
 
@@ -63,3 +65,45 @@ class LogComposeLayout(LogLayout):
             content.append(x.layout(msg))
 
         return ' '.join(content)
+
+
+class LayoutNames:
+    TimeLayout = 'TimeLayout'
+    NameLayout = 'NameLayout'
+    LevelLayout = 'LevelLayout'
+    IndentLayout = 'IndentLayout'
+    MessageLayout = 'MessageLayout'
+    ThreadIdLayout = 'ThreadIdLayout'
+    ProcessIdLayout = 'ProcessIdLayout'
+
+
+class LogLayoutRepository:
+
+    def __init__(self):
+        self.layouts = {}
+
+    def add(self, name: str, creator) -> 'LogLayoutRepository':
+        if creator is None:
+            raise ValueError('Layout creator is none')
+
+        self.layouts[name] = creator
+        return self
+
+    def get(self, name: str) -> LogLayout:
+        if name in self.layouts:
+            creator = self.layouts.get(name)
+            return creator()
+
+        return None
+
+    def default(self) -> 'LogLayoutRepository':
+        (
+            self.add(LayoutNames.NameLayout, lambda: LogNameLayout())
+                .add(LayoutNames.TimeLayout, lambda: LogTimeLayout())
+                .add(LayoutNames.LevelLayout, lambda: LogLevelLayout())
+                .add(LayoutNames.IndentLayout, lambda: LogIndentLayout())
+                .add(LayoutNames.MessageLayout, lambda: LogMessageLayout())
+                .add(LayoutNames.ThreadIdLayout, lambda: LogThreadIdLayout())
+                .add(LayoutNames.ProcessIdLayout, lambda: LogProcessIdLayout())
+        )
+        return self
