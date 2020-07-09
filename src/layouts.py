@@ -96,6 +96,9 @@ class LogLayoutRepository:
 
         return None
 
+    def all(self):
+        return list(self.layouts.values())
+
     def default(self) -> 'LogLayoutRepository':
         (
             self.add(LayoutNames.NameLayout, lambda: LogNameLayout())

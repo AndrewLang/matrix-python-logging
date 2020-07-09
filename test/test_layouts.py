@@ -100,3 +100,8 @@ class TestLogMessage(TestCase):
         verify(LayoutNames.MessageLayout)
         verify(LayoutNames.ThreadIdLayout)
         verify(LayoutNames.ProcessIdLayout)
+
+    def test_layout_repo_all(self):
+        repo = LogLayoutRepository().default()
+        all = repo.all()
+        self.assertEqual(7,  len(all))        

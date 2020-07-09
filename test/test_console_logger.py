@@ -1,29 +1,26 @@
 from unittest import TestCase, main
-from src.logger import Logger
+from src.console_logger import ConsoleLogger
 from src.config import LoggerConfig
 from src.log_level import LevelDebug
+from src.layouts import LogLayoutRepository, LogComposeLayout, LayoutNames
 import datetime
 
 
-class TestLogMessage(TestCase):
-    def create_logger(self):
+class TestConsoleLogMessage(TestCase):
+
+    def create_logger(self) -> ConsoleLogger:
         config = LoggerConfig()
-        return Logger('Jasoom', config)
-
-    def test_logger_init(self):
-        logger = self.create_logger()
-        enabled = logger.isEnable(LevelDebug)
-        self.assertTrue(enabled)
-
-    def test_logger_format(self):
-        logger = self.create_logger()
-        actual = logger.format(' ', 'this', 'is', 'jasoom')
-        print(actual)
+        repo = LogLayoutRepository().default()       
+        config.layout = LogComposeLayout([
+            repo.get(LayoutNames.TimeLayout), repo.get(LayoutNames.LevelLayout),
+            repo.get(LayoutNames.NameLayout), repo.get(LayoutNames.MessageLayout)
+        ])
+        return ConsoleLogger('Jasoom', config)
 
     def test_debug(self):
         logger = self.create_logger()
         logger.debug('now: ', datetime.datetime.now())
-
+        
     def test_info(self):
         logger = self.create_logger()
         logger.info('now: ', datetime.datetime.now())
