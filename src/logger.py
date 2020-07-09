@@ -18,7 +18,6 @@ class Logger:
 
     def log(self, message: LogMessage) -> 'Logger':
         content = self.config.layout.layout(message)
-        print(content)
         self.write(content)
         return self
 
