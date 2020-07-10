@@ -21,12 +21,12 @@ class TestColorConsoleLogMessage(TestCase):
     def test_parse_foreground(self):
         style = LevelStyle.debug()
         actual = style._parseForeground()
-        self.assertEqual(f'{Colors.Color256Start}245', actual)
+        self.assertEqual(f'90', actual)
 
     def test_parse_background(self):
-        style = LevelStyle.debug()
+        style = LevelStyle.fatal()
         actual = style._parseBackground()
-        self.assertEqual(f'{Colors.Color256Start}24', actual)
+        self.assertEqual(f'', actual)
 
     def test_parse_style(self):
         style = LevelStyle.debug()
@@ -43,9 +43,8 @@ class TestColorConsoleLogMessage(TestCase):
         style.styles = '1 , 4 '
         actual = style.parse()
         print(actual)
-        self.assertEqual(4, len(actual))
-        self.assertEqual('38;5;245', actual[0])
-        self.assertEqual('38;5;24', actual[1])
-        self.assertEqual('1', actual[2])
-        self.assertEqual('4', actual[3])
+        self.assertEqual(3, len(actual))
+        self.assertEqual('90', actual[0])
+        self.assertEqual('1', actual[1])
+        self.assertEqual('4', actual[2])
 

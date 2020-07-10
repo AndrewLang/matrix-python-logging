@@ -159,19 +159,19 @@ class LevelStyle:
         return styles
 
     def debug() -> 'LevelStyle':
-        return LevelStyle('245', '24', '')
+        return LevelStyle('DarkGray', '', '')
 
     def info() -> 'LevelStyle':
-        return LevelStyle('56', '234', '1')
+        return LevelStyle('LightGreen', '', '1')
 
     def warn() -> 'LevelStyle':
-        return LevelStyle('226', '124', '4')
+        return LevelStyle('LightYellow', '', '4')
 
     def error() -> 'LevelStyle':
-        return LevelStyle('166', '234', '1,4')
+        return LevelStyle('LightMagenta', '', '1,4')
 
     def fatal() -> 'LevelStyle':
-        return LevelStyle('196', '11', '7')
+        return LevelStyle('LightRed', '', '')
 
 
 class LoggerConfig:
