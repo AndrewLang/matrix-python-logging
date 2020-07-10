@@ -3,7 +3,7 @@ from .config import LoggerConfig
 from .log_message import LogMessage
 
 import sys
-import colorama
+import os
 
 
 class ColorConsoleLogger(ConsoleLogger):
@@ -26,5 +26,6 @@ class ColorConsoleLogger(ConsoleLogger):
     def _enableColorful(self) -> None:
         if self.colorEnabled:
             return
-        colorama.init()
+        
+        os.system('')
         self.colorEnabled = True
