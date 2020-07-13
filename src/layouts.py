@@ -2,10 +2,16 @@ from .log_message import LogMessage
 
 from threading import current_thread
 import os
-
+import json
 
 class LogLayout:
+    def __init__(self):
+        self.type = ''
+    
     def layout(self, msg: LogMessage) -> str:
+        pass
+
+    def toJSON(self) -> str:
         pass
 
 
@@ -14,18 +20,34 @@ class LogTimeLayout(LogLayout):
     def layout(self, msg: LogMessage) -> str:
         return f'[{msg.datetime}]'
 
+    def toJSON(self)-> str:
+        data = {
+            'type': LayoutNames.TimeLayout
+        }
+        return json.dumps(data)
+
 
 class LogNameLayout(LogLayout):
 
     def layout(self, msg: LogMessage) -> str:
         return f'[{msg.name}]'
 
+    def toJSON(self)-> str:
+        data = {
+            'type': LayoutNames.NameLayout
+        }
+        return json.dumps(data)
 
 class LogLevelLayout(LogLayout):
 
     def layout(self, msg: LogMessage) -> str:
         return f'[{msg.level}]'
 
+    def toJSON(self)-> str:
+        data = {
+            'type': LayoutNames.LevelLayout
+        }
+        return json.dumps(data)
 
 class LogIndentLayout(LogLayout):
 
@@ -35,24 +57,44 @@ class LogIndentLayout(LogLayout):
         else:
             return ' ' * msg.indent
 
+    def toJSON(self)-> str:
+        data = {
+            'type': LayoutNames.IndentLayout
+        }
+        return json.dumps(data)
 
 class LogMessageLayout(LogLayout):
 
     def layout(self, msg: LogMessage) -> str:
         return msg.message
 
+    def toJSON(self)-> str:
+        data = {
+            'type': LayoutNames.MessageLayout
+        }
+        return json.dumps(data)
 
 class LogThreadIdLayout(LogLayout):
 
     def layout(self, msg: LogMessage) -> str:
         return f'{current_thread().ident}'
 
+    def toJSON(self)-> str:
+        data = {
+            'type': LayoutNames.ThreadIdLayout
+        }
+        return json.dumps(data)
 
 class LogProcessIdLayout(LogLayout):
 
     def layout(self, msg: LogMessage) -> str:
         return f'{os.getpid()}'
 
+    def toJSON(self)-> str:
+        data = {
+            'type': LayoutNames.ProcessIdLayout
+        }
+        return json.dumps(data)
 
 class LogComposeLayout(LogLayout):
 
@@ -65,6 +107,12 @@ class LogComposeLayout(LogLayout):
             content.append(x.layout(msg))
 
         return ' '.join(content)
+
+    def toJSON(self)-> str:
+        data = {
+            
+        }
+        return json.dumps(data)
 
 
 class LayoutNames:

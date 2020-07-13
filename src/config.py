@@ -1,5 +1,6 @@
 from .log_level import LevelAll
 from .layouts import LogComposeLayout
+import json
 
 
 class Colors:
@@ -158,6 +159,14 @@ class LevelStyle:
 
         return styles
 
+    def toJSON(self) -> str:
+        data = {
+            'foreground': self.foreground,
+            'background': self.background,
+            'styles': self.styles
+        }
+        return json.dumps(data)
+
     def debug() -> 'LevelStyle':
         return LevelStyle('DarkGray', '', '')
 
@@ -175,8 +184,10 @@ class LevelStyle:
 
 
 class LoggerConfig:
-    def __init__(self):
-        self.min_level = LevelAll.value
+    def __init__(self, name=''):
+        self.name = name
+        self.minLevel = LevelAll.value
+        self.enable = True
         self.layout = LogComposeLayout([])
         self.debugStyle = LevelStyle.debug()
         self.infoStyle = LevelStyle.info()
@@ -184,7 +195,63 @@ class LoggerConfig:
         self.errorStyle = LevelStyle.error()
         self.fatalStyle = LevelStyle.fatal()
 
+    def toJSON(self):
+        data = {
+            'name': self.name,
+            'minLevel': self.minLevel,
+            'enable': self.enable,
+            'layout': self.layout,
+            'debugStyle': self.debugStyle,
+            'infoStyle': self.infoStyle,
+            'warnStyle': self.warnStyle,
+            'errorStyle': self.errorStyle,
+            'fataStyle': self.fatalStyle,
+        }
+        return json.dumps(data, default=lambda x: x.toJSON())
+
+    def __repr__(self):
+        return self.toJSON()
+
 
 class Configuration:
     def __init__(self):
+        self.loggerConfigs = {}
+
+    def count(self) -> int:
+        return len(self.loggerConfigs)
+
+    def add(self, name: str, config: LoggerConfig) -> 'Configuration':
+        if name is None:
+            raise ValueError('Config name is empty')
+        if config is None:
+            raise ValueError('Config is none')
+
+        if not config.name:
+            config.name = name
+
+        self.loggerConfigs[name] = config
+        return self
+
+    def remove(self, name: str) -> 'Configuration':
+        if name is None:
+            raise ValueError('Config name is empty')
+
+        self.loggerConfigs.pop(name)
+        return self
+
+    def toJSON(self) -> str:
+        configs = []
+        for x in self.loggerConfigs.values():
+            configs.append(x.toJSON())
+
+        data = {
+            'configs': configs
+        }
+        return json.dumps(data, default=lambda x: x.toJSON(), indent=4)
+
+    def load(self, file: str):
+        pass
+
+    def save(self, file: str):
+        content = self.toJSON()
         pass

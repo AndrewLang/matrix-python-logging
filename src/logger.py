@@ -11,7 +11,7 @@ class Logger:
         self.config = config
 
     def isEnable(self, level: LogLevel) -> bool:
-        return level.value >= self.config.min_level
+        return level.value >= self.config.minLevel
 
     def format(self, format: str, *args) -> str:
         return format.join(args)

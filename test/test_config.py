@@ -1,5 +1,5 @@
 from unittest import TestCase, main
-from src.config import LoggerConfig, LevelStyle, Formatter, Colors
+from src.config import LoggerConfig, LevelStyle, Formatter, Colors, Configuration
 
 
 class TestColorConsoleLogMessage(TestCase):
@@ -48,3 +48,29 @@ class TestColorConsoleLogMessage(TestCase):
         self.assertEqual('1', actual[1])
         self.assertEqual('4', actual[2])
 
+    def test_style_json(self):
+        style = LevelStyle.debug()
+        actual = style.toJSON()
+        print(actual)
+
+    def createConfiguration(self):
+        config = Configuration()
+        consoleConfig = LoggerConfig()
+        config.add('console', consoleConfig)
+        return config
+
+    def test_configuration_add(self):
+        config = self.createConfiguration()
+        length = config.count()
+
+        logConfig = LoggerConfig()
+        config.add('jasoom', logConfig)
+        self.assertEqual(length + 1, config.count())
+
+        config.remove('jasoom')
+        self.assertEqual(length, config.count())
+
+    def test_configuration_json(self):
+        config = self.createConfiguration()
+        content = config.toJSON()
+        print(content)
